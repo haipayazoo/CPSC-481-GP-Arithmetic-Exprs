@@ -1,4 +1,14 @@
-
+; TO-DO list
+; Create the following functions:
+; *Function that mutates an expresssion
+; *Function that does a crossover between parents to produce kids
+; *A function that purges functions
+; *A function that prints the best and worst fitness of each generation
+; *A function that calculates the fitness of each expression given the sample data
+; *A function that creates a population of critters
+; *A function that prints the best expression of each data
+;
+; There might be more things but those are the big functions that need to be done
 
 ; Creates a critter (random expression) to add to the population - uses
 ; recursion in order to create a deep expresssion based on a random number
