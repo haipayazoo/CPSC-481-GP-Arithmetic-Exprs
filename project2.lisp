@@ -5,7 +5,6 @@
 ; *A function that purges functions
 ; *A function that prints the best and worst fitness of each generation
 ; *A function that calculates the fitness of each expression given the sample data
-; *A function that creates a population of critters
 ; *A function that prints the best expression of each data
 ;
 ; There might be more things but those are the big functions that need to be done
@@ -13,7 +12,6 @@
 ; Creates a critter (random expression) to add to the population - uses
 ; recursion in order to create a deep expresssion based on a random number
 (defun create_critter ()
-  (let (parent kid1 kid2 random_num)
 
     ; The parent will always have an operator to be a legal expression
     (setq parent (random_op))
@@ -46,7 +44,29 @@
       )
     )
 
-    (list parent kid1 kid2))
+    (list parent kid1 kid2)
+
+)
+
+; Creates a population of 50 critters (random expressions)
+(defun populate ()
+
+  ; Sets the pool list empty
+  (setq pool '())
+
+  ; Loops 50 times for each critter
+  (loop while (< (length pool) 50) do
+
+    ; Creates a critter
+    (setq expression (create_critter))
+
+    ; Adds the critter to the pool
+    (setq pool (append pool (list expression)))
+
+  )
+
+  ; Returns the population
+  population
 
 )
 
@@ -66,11 +86,4 @@
 (defun random_op ()
   (let ((op_list (list '+ '- '*)))
     (nth (random (length op_list)) op_list))
-)
-
-(defun test-expression(xval yval zval)
-  (setq x xval)
-  (setq y yval)
-  (setq z zval)
-  (eval (write (create_critter)))
 )
