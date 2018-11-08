@@ -1,3 +1,5 @@
+
+
 ; Creates a critter (random expression) to add to the population - uses
 ; recursion in order to create a deep expresssion based on a random number
 (defun create_critter ()
