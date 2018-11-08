@@ -13,14 +13,14 @@
 ; Creates a critter (random expression) to add to the population - uses
 ; recursion in order to create a deep expresssion based on a random number
 (defun create_critter ()
-  (let parent kid1 kid2 random_num)
+  (let (parent kid1 kid2 random_num)
 
     ; The parent will always have an operator to be a legal expression
     (setq parent (random_op))
 
     ; Depending on the random number the kid will
     ; have a number, an operator, or another expression
-    (setq random_num (random 5)
+    (setq random_num (random 5))
     (if (< random_num 2)
       (setq kid1 (random_number))
 
@@ -46,7 +46,7 @@
       )
     )
 
-    (list parent kid1 kid2)))
+    (list parent kid1 kid2))
 
 )
 
