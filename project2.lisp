@@ -2,10 +2,7 @@
 ; Create the following functions:
 ; *Function that mutates a kid
 ; *Function that does a crossover between parents to produce kids
-; *A function that purges functions
-; *A function that prints the best and worst fitness of each generation
-; *A function that calculates the fitness of each expression given the sample data
-; *A function that prints the best expression of each data
+; *A function that purges adds the kids only into the pool and not the parents
 ;
 ; There might be more things but those are the big functions that need to be done
 
