@@ -253,19 +253,24 @@
     (nth (random (length op_list)) op_list))
 )
 
+; Does a crossover of two random parents and creates two kids from the
+; crossover.
 (defun crossover ()
+
+    ; Shuffles the pool
+    (shuffle_pool)
 
     (setq index 0)
 
-    (randomize_pool)
-
+    
 
 )
 
 ; Randomizes the pool so that the crossovers aren't biased towards a sepcific
 ; area of the pool; more diversity
-(defun randomize_pool ()
+(defun shuffle_pool ()
 
+    ; Loop shuffles the pool
     (loop for i from (length pool) downto 2 do
 
         (rotatef (elt pool (random i)) (elt pool (1- i)))
@@ -292,7 +297,7 @@
     (best_fitness)
     (worst_fitness)
     (average_fitness)
-    ;(randomize_pool)
+    ;(shuffle_pool)
     ;(print_population)
 
 )
