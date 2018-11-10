@@ -1,3 +1,35 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;Authors: 		Cameron Mathos - cmathos@csu.fullerton.edu
+;				      John Shelton - john.shelton789@csu.fullerton.edu
+;           	Christopher Bos - cbos95@csu.fullerton.edu
+;
+;Team Name: 	CCJ
+;
+;Description: This project is the Genetic Programming Arithmetic
+;             Expressions project. The purpose of this project is to create a
+;             population of fifty critters, or random expressions, and then
+;             evaluate their fitness based on the test samples provided by the
+;             project instructions. The fitness is based on the error rate of
+;             how accurate each expression is from the actual answer of the test
+;             data.
+;
+;             From there, the program evaluates the best, worst, and overall
+;             average fitness of that generation
+;
+;             From there, each critter mates with another and produces kids.
+;             This is done by selecting a random section of each parent and
+;             crossing them over to produce children.
+;
+;             The parents are purged from the pool and the kids are addded
+;             into the pool. The pool is then exposed to radiation, giving each
+;             critter a 5% chance of undergoing a mutation, which is replacing
+;             a random part of the critter with either an operator, a variable
+;             or a number.
+;
+;             This process is repeated for 50 generations, with each generation
+;             printing their best expression and fitness, worst fitness, and
+;             overall average fitness.
+
 ; Creates a critter (random expression) to add to the population - uses
 ; recursion in order to create a deep expresssion based on a random number
 ; Creates a critter (random expression)
