@@ -17,13 +17,18 @@
     ; Depending on the random number the kid will
     ; have a number, an operator, or another expression
     (setq random_num (random 5))
+
     (if (< random_num 2)
+
+        ; Sets kid1 to a random number
         (setq kid1 (random_number))
 
         (if (< random_num  4)
 
+          ; Sets kid1 to a random variable
           (setq kid1 (random_var))
 
+          ; Otherwise, sets kid1 to a list, further extending the equation
           (setq kid1 (create_critter))
         )
 
@@ -34,16 +39,20 @@
     (setq random_num (random 5))
     (if (< random_num 2)
 
+        ; Sets kid2 to a random number
         (setq kid2 (random_number))
 
         (if (< random_num  4)
 
+            ; Sets kid2 to a random variable
             (setq kid2 (random_var))
 
+            ; Otherwise, sets kid2 to a list, further extending the equation
             (setq kid2 (create_critter))
         )
     )
 
+    ; Creates part of the expression
     (list parent kid1 kid2)
 
 )
