@@ -462,10 +462,10 @@
             (if (eq (random 2) 0)
 
                 ; Replace with a variable
-                (setq new_leaf random_var)
+                (setq new_leaf (random_var))
 
                 ; Replace with a number
-                (setq new_leaf random_num)
+                (setq new_leaf (random_number))
 
             )
 
