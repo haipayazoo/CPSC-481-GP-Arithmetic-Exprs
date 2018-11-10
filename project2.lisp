@@ -241,7 +241,7 @@
     (setq average (/ average (float (length fitness_list))))
 
     ; Outputs the average; converts to floating point number
-    (format t "Average Fitness: ~S~%" average)
+    (format t "Average Fitness: ~S~%~%~%" average)
 )
 
 
@@ -518,25 +518,39 @@
 )
 
 (defun main ()
+
+    ; The current generation (minus 1 for index purposes)
+    (setq current_gen 0)
+
+    ; The total generations for the entire process
+    (setq generations 50)
+
     (populate)
-    (critter_fitness)
 
-    (print_population)
-    ;(format t "Fitness List: ~S~%" fitness_list)
+    (loop while (< current_gen generations) do
 
-    (best_expression)
-    (best_fitness)
-    (worst_fitness)
-    (average_fitness)
+        (format t "Generation ~D: ~%~%" (+ current_gen 1))
 
-    ;(shuffle_pool)
-    ;(print_population)
+        (critter_fitness)
 
-    ;(crossover)
-    (radiate)
+        ;(print_population)
+        ;(format t "Fitness List: ~S~%" fitness_list)
 
-    (print_population)
+        (best_expression)
+        (best_fitness)
+        (worst_fitness)
+        (average_fitness)
 
+        ;(shuffle_pool)
+        ;(print_population)
+
+        (crossover)
+        (radiate)
+
+        ;(print_population)
+
+        (setq current_gen (+ current_gen 1))
+    )
 )
 
 (main)
