@@ -1,11 +1,3 @@
-; TO-DO list
-; Create the following functions:
-; *Function that mutates a kid
-; *Function that does a crossover between parents to produce kids
-; *A function that purges adds the kids only into the pool and not the parents
-;
-; There might be more things but those are the big functions that need to be done
-
 ; Creates a critter (random expression) to add to the population - uses
 ; recursion in order to create a deep expresssion based on a random number
 ; Creates a critter (random expression)
@@ -499,15 +491,12 @@
             ; Otherwise, continue traversing the tree until a leaf is found
             (find_leaf leaf)
 
-
-
         )
 
     )
 
 )
 
-; Used to debug functions to see if they work
 ; Displays the current pool
 (defun print_population ()
     (setq index 0)
@@ -525,32 +514,39 @@
     ; The total generations for the entire process
     (setq generations 50)
 
+    ; Populates the pool with 50 critters
     (populate)
 
+    ; Loops for every single generation
     (loop while (< current_gen generations) do
 
         (format t "Generation ~D: ~%~%" (+ current_gen 1))
 
+        ; Aquires the fitness of each critter in the pool
         (critter_fitness)
+
+        ; Uncomment below to find this generation's population and fitness
 
         ;(print_population)
         ;(format t "Fitness List: ~S~%" fitness_list)
 
+        ; Acquires this generation's best expression, best fitness, worst
+        ; fitness, and average fitness
         (best_expression)
         (best_fitness)
         (worst_fitness)
         (average_fitness)
 
-        ;(shuffle_pool)
-        ;(print_population)
-
+        ; Begins the  crossover process
         (crossover)
+
+        ; Radiates the pool, 5% of each kid to undergo a random mutation
         (radiate)
 
-        ;(print_population)
-
+        ; Ticks the generation count by one
         (setq current_gen (+ current_gen 1))
     )
 )
 
+; Starts the main program of this project
 (main)
