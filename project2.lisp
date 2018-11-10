@@ -17,31 +17,42 @@
     ; Depending on the random number the kid will
     ; have a number, an operator, or another expression
     (setq random_num (random 5))
+
     (if (< random_num 2)
-      (setq kid1 (random_number))
 
-      (if (< random_num  4)
+        ; Sets kid1 to a random number
+        (setq kid1 (random_number))
 
-        (setq kid1 (random_var))
+        (if (< random_num  4)
 
-        (setq kid1 (create_critter))
-      )
+          ; Sets kid1 to a random variable
+          (setq kid1 (random_var))
+
+          ; Otherwise, sets kid1 to a list, further extending the equation
+          (setq kid1 (create_critter))
+        )
+
     )
 
     ; Depending on the random number the kid will
     ; have a number, an operator, or another expression
     (setq random_num (random 5))
     (if (< random_num 2)
-      (setq kid2 (random_number))
 
-      (if (< random_num  4)
+        ; Sets kid2 to a random number
+        (setq kid2 (random_number))
 
-        (setq kid2 (random_var))
+        (if (< random_num  4)
 
-        (setq kid2 (create_critter))
-      )
+            ; Sets kid2 to a random variable
+            (setq kid2 (random_var))
+
+            ; Otherwise, sets kid2 to a list, further extending the equation
+            (setq kid2 (create_critter))
+        )
     )
 
+    ; Creates part of the expression
     (list parent kid1 kid2)
 
 )
@@ -50,20 +61,20 @@
 ; Creates a population of 50 critters (random expressions)
 (defun populate ()
 
-  ; Sets the pool list empty
-  (setq pool '())
+    ; Sets the pool list empty
+    (setq pool '())
 
-  ; Loops 50 times for each critter; change the value if you want more or less
-  ; critters in the pool
-  (loop while (< (length pool) 50) do
+    ; Loops 50 times for each critter; change the value if you want more or less
+    ; critters in the pool
+    (loop while (< (length pool) 50) do
 
-    ; Creates a critter
-    (setq expression (create_critter))
+      ; Creates a critter
+      (setq expression (create_critter))
 
-    ; Adds the critter to the pool
-    (setq pool (append pool (list expression)))
+      ; Adds the critter to the pool
+      (setq pool (append pool (list expression)))
 
-  )
+    )
 
 )
 
@@ -94,6 +105,7 @@
 
       ; Loops for every test sample
       (dolist (sample test_samples)
+
           (setq x (nth 0 sample))
           (setq y (nth 1 sample))
           (setq z (nth 2 sample))
@@ -229,7 +241,7 @@
     (setq average (/ average (float (length fitness_list))))
 
     ; Outputs the average; converts to floating point number
-    (format t "Average Fitness: ~S~%" average)
+    (format t "Average Fitness: ~S~%~%~%" average)
 )
 
 
@@ -313,19 +325,19 @@
             ; If the node length is one, then we can't go any further
             (if (= (length node) 1)
 
-              ; Return the selected node
-              node
+                ; Return the selected node
+                node
 
-              (progn
+                (progn
 
-                  ; 50% chance the node will be returned or we will keep going
-                  ; further down the parent tree until we select one
-                  (if (= (random 2) 0)
-                      node
+                    ; 50% chance the selected node will be returned or we will
+                    ; keep going further down the expression tree
+                    (if (= (random 2) 0)
+                        node
 
-                      ; Recursive call to go further down the parent tree
-                      (find_random_node node))
-                  )
+                        ; Recursive call to go further down the expression tree
+                        (find_random_node node))
+                )
             )
         )
     )
@@ -333,7 +345,7 @@
 
 
 ; Creates a kid from one of the two parents using random nodes chosen
-; from each parent
+; from each parent. Each node is a crossover point from each parent.
 (defun create_kid (parent node1 node2)
 
     ; Condition statement
@@ -342,7 +354,7 @@
         ; If the parent is not a list, then the parent is returned
         ( (not (listp parent)) parent)
 
-        ; If the parent and node1 are the same, then return node 2
+        ; If the parent and node1 are the same, then swap node1 with node2
         ( (eq parent node1) node2)
 
         ; These conditions verify the section of the parent where node1 comes
@@ -366,7 +378,7 @@
               ; Sets argument two based on what the recusive function returns
               (setq arg2 (create_kid (nth 2 parent) node1 node2))
 
-              ; forms the equation
+              ; Forms the equation
               (list op arg1 arg2)
            )
         )
@@ -387,35 +399,158 @@
 
 )
 
- ;Used to debug functions to see if they work
- ;Displays the current pool
-;(defun print_population ()
-;    (setq index 0)
-;    (loop while (< index (length fitness_list)) do
-;        (format t "Index: ~D  - ~S~%" index (nth index pool))
-;        (setq index (+ index 1))
-;    )
-;)
+; Each critter is exposed to radiation and has a 5% chance of undergoing
+; a random mutation
+(defun radiate ()
+
+    ; For practical purposes, "mutations" counts how many mutations have
+    ; occured in each generation. This initializes "mutations" to 0 every
+    ; generation
+    (setq mutations 0)
+
+    (setq index 0)
+
+    (loop while (< index (length pool)) do
+
+        ; If the random number is less than 5 (0-4); which is 5%
+        ; then a mutation occurs
+        (if (< (random 100) 5)
+
+            ; Evaluate the following
+            (progn
+
+                ; Replaces the kid in the pool with mutated kid
+                (setf (nth index pool) (mutate (nth index pool)))
+
+                ; Since a mutation has occured, increment "mutations"
+                (setq mutations (+ mutations 1))
+
+                ;(format t "A mutation has occurred in index ~D.~%" index)
+
+            )
+
+        )
+
+        ; Increment loop counter
+        (setq index (+ index 1))
+
+    )
+
+)
+
+
+; The process of mutating a critter from the pool
+(defun mutate (critter)
+
+    ; Finds a leaf from the critter
+    (setq leaf (find_leaf critter))
+
+    ; Gets a list of operators
+    (setq ops '(+ - *))
+
+    ; If the leaf is an operator then the operator is replaced
+    (if (member leaf ops)
+
+        ; Replaces the leaf with an operator
+        (setq new_leaf (random_op))
+
+        ; Otherwise, replace the leaf with either a variable or a number
+        (progn
+
+            ; 50% chance of getting either a variable or a number as a
+            ; replacement
+            (if (eq (random 2) 0)
+
+                ; Replace with a variable
+                (setq new_leaf (random_var))
+
+                ; Replace with a number
+                (setq new_leaf (random_number))
+
+            )
+
+        )
+
+    )
+
+        ; Creates the same kid but with the mutation replaced
+        (create_kid critter leaf new_leaf)
+
+)
+
+; Finds a leaf from the critter that will be used to mutate
+(defun find_leaf (critter)
+
+    (setq leaf (nth (random 3) critter))
+
+    ; If the current node is not a list then it's a leaf
+    (if (not (listp leaf))
+
+        ; Return leaf
+        leaf
+
+        ; If the length of the node is one, then it's a leaf
+        (if (= (length leaf) 1)
+
+            ; Return leaf
+            leaf
+
+
+            ; Otherwise, continue traversing the tree until a leaf is found
+            (find_leaf leaf)
+
+
+
+        )
+
+    )
+
+)
+
+; Used to debug functions to see if they work
+; Displays the current pool
+(defun print_population ()
+    (setq index 0)
+    (loop while (< index (length fitness_list)) do
+        (format t "Index: ~D  - ~S~%" index (nth index pool))
+        (setq index (+ index 1))
+    )
+)
 
 (defun main ()
+
+    ; The current generation (minus 1 for index purposes)
+    (setq current_gen 0)
+
+    ; The total generations for the entire process
+    (setq generations 50)
+
     (populate)
-    (critter_fitness)
 
-    ;(print_population)
-    ;(format t "Fitness List: ~S~%" fitness_list)
+    (loop while (< current_gen generations) do
 
-    (best_expression)
-    (best_fitness)
-    (worst_fitness)
-    (average_fitness)
+        (format t "Generation ~D: ~%~%" (+ current_gen 1))
 
-    ;(shuffle_pool)
-    ;(print_population)
+        (critter_fitness)
 
-    (crossover)
+        ;(print_population)
+        ;(format t "Fitness List: ~S~%" fitness_list)
 
-    ;(print_population)
+        (best_expression)
+        (best_fitness)
+        (worst_fitness)
+        (average_fitness)
 
+        ;(shuffle_pool)
+        ;(print_population)
+
+        (crossover)
+        (radiate)
+
+        ;(print_population)
+
+        (setq current_gen (+ current_gen 1))
+    )
 )
 
 (main)
