@@ -257,14 +257,122 @@
 ; crossover.
 (defun crossover ()
 
-    ; Shuffles the pool
+    ; Empties the new pool so it is ready to have kids in it
+    (setq new_pool '())
+
+    ; Shuffles the current pool
     (shuffle_pool)
 
     (setq index 0)
 
-    
+    ; Loops for every critter in the pool
+    (loop while (< index (length pool)) do
+
+        ;(print index)
+
+        ; Gets the first two parents from the shuffled pool
+        (setq parent1 (nth index pool))
+        (setq parent2 (nth (+ index 1) pool))
+
+        ; Acquires a random, legal node from each parent
+        (setq node1 (find_random_node parent1))
+        (setq node2 (find_random_node parent2))
+
+        ; Creates kids based on each parent and the nodes acquired
+        (setq kid1 (create_kid parent1 node1 node2))
+        (setq kid2 (create_kid parent2 node2 node1))
+
+        ; Adds both kids into the new pool
+        (setq new_pool (append new_pool (list kid1)))
+        (setq new_pool (append new_pool (list kid2)))
+
+        ; Increments the loop by 2 so we can get the next two parents
+        (setq index (+ index 2))
+
+    )
+
+    ; The old pool becomes the new pool of the next generation of kids
+    (setq pool new_pool)
 
 )
+
+; Picks a valid node of an expression at random to be used to create a kid
+(defun find_random_node (parent)
+
+    ; Picks either argument one or argument two of the parent randomly
+    (setq node (nth (+ 1 (random 2)) parent))
+
+    ; If the node is not a list, then we can't go further
+    (if (not (listp node))
+
+        ; Return selected node
+        node
+
+        (progn
+
+            ; If the node length is one, then we can't go any further
+            (if (= (length node) 1)
+
+              ; Return the selected node
+              node
+
+              (progn
+
+                  ; 50% chance the node will be returned or we will keep going
+                  ; further down the parent tree until we select one
+                  (if (= (random 2) 0)
+                      node
+
+                      ; Recursive call to go further down the parent tree
+                      (find_random_node node))
+                  )
+            )
+        )
+    )
+)
+
+
+; Creates a kid from one of the two parents using random nodes chosen
+; from each parent
+(defun create_kid (parent node1 node2)
+
+    ; Condition statement
+    (cond
+
+        ; If the parent is not a list, then the parent is returned
+        ( (not (listp parent)) parent)
+
+        ; If the parent and node1 are the same, then return node 2
+        ( (eq parent node1) node2)
+
+        ; These conditions verify the section of the parent where node1 comes
+        ; from in the parent and swaps it out with node2 from the other parent.
+        ; This is the actual crossover that will create a new kid inheriting
+        ; traits of the both parents
+        ( (eq (nth 0 parent) node1) (list node2 (nth 1 parent)  (nth 2 parent)))
+        ( (eq (nth 1 parent) node1) (list (nth 0 parent) node2 (nth 2 parent)))
+        ( (eq (nth 2 parent) node1) (list (nth 0 parent) (nth 1 parent) node2))
+
+        ; Otherwise create the kid with the operator from the parent and the
+        ; two arguments
+        (t (progn
+
+              ; Sets the operator of the kid
+              (setq op (nth 0 parent))
+
+              ; Sets argument one based on what the recursive function returns
+              (setq arg1 (create_kid (nth 1 parent) node1 node2))
+
+              ; Sets argument two based on what the recusive function returns
+              (setq arg2 (create_kid (nth 2 parent) node1 node2))
+
+              ; forms the equation
+              (list op arg1 arg2)
+           )
+        )
+    )
+)
+
 
 ; Randomizes the pool so that the crossovers aren't biased towards a sepcific
 ; area of the pool; more diversity
@@ -279,25 +387,33 @@
 
 )
 
-
+ ;Used to debug functions to see if they work
+ ;Displays the current pool
 ;(defun print_population ()
 ;    (setq index 0)
 ;    (loop while (< index (length fitness_list)) do
 ;        (format t "Index: ~D  - ~S~%" index (nth index pool))
 ;        (setq index (+ index 1))
 ;    )
-;
+;)
 
 (defun main ()
     (populate)
     (critter_fitness)
+
     ;(print_population)
     ;(format t "Fitness List: ~S~%" fitness_list)
+
     (best_expression)
     (best_fitness)
     (worst_fitness)
     (average_fitness)
+
     ;(shuffle_pool)
+    ;(print_population)
+
+    (crossover)
+
     ;(print_population)
 
 )
