@@ -53,7 +53,8 @@
   ; Sets the pool list empty
   (setq pool '())
 
-  ; Loops 50 times for each critter
+  ; Loops 50 times for each critter; change the value if you want more or less
+  ; critters in the pool
   (loop while (< (length pool) 50) do
 
     ; Creates a critter
@@ -63,9 +64,6 @@
     (setq pool (append pool (list expression)))
 
   )
-
-  ; Returns the population
-  pool
 
 )
 
@@ -209,17 +207,28 @@
 
 ; Finds the average fitness value of that generation
 (defun average_fitness ()
+
+    ; Index of the loop
     (setq index 0)
+
+    ; The average fitness
     (setq average 0)
+
+    ; Loops for every critter (fitness value)
     (loop while (< index (length fitness_list)) do
 
+        ; Adds up every critter's fitness value
         (setq average (+ average (nth index fitness_list)))
+
+        ; Increments the loop iterator
         (setq index (+ index 1))
 
     )
 
+    ; Divides the sum by the amount of critters in the pool, obtaining our average
     (setq average (/ average (float (length fitness_list))))
 
+    ; Outputs the average; converts to floating point number
     (format t "Average Fitness: ~S~%" average)
 )
 
@@ -244,22 +253,48 @@
     (nth (random (length op_list)) op_list))
 )
 
+(defun crossover ()
+
+    (setq index 0)
+
+    (randomize_pool)
+
+
+)
+
+; Randomizes the pool so that the crossovers aren't biased towards a sepcific
+; area of the pool; more diversity
+(defun randomize_pool ()
+
+    (loop for i from (length pool) downto 2 do
+
+        (rotatef (elt pool (random i)) (elt pool (1- i)))
+
+    )
+
+)
+
+
 ;(defun print_population ()
 ;    (setq index 0)
 ;    (loop while (< index (length fitness_list)) do
 ;        (format t "Index: ~D  - ~S~%" index (nth index pool))
 ;        (setq index (+ index 1))
 ;    )
-;)
+;
 
 (defun main ()
     (populate)
     (critter_fitness)
-    (format t "Fitness List: ~S~%" fitness_list)
+    ;(print_population)
+    ;(format t "Fitness List: ~S~%" fitness_list)
     (best_expression)
     (best_fitness)
     (worst_fitness)
     (average_fitness)
+    ;(randomize_pool)
+    ;(print_population)
+
 )
 
 (main)
